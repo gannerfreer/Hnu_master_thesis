@@ -1,0 +1,137 @@
+{
+	"files.autoSave": "off", // 关闭自动保存 
+	"latex-workshop.latex.recipe.default": "docker-latex",
+	// 设置默认编译指令，根据name在下方recipes取具体的先后执行命令
+	"latex-workshop.latex.recipes": [
+		// 对应不同的编译方式
+		{
+			"name": "docker-latex",
+			"tools": [
+				"docker-latex",
+				"docker-bibtex",
+				"docker-latex",
+				"docker-latex",
+				"redirect",
+			],
+		},
+		{
+			"name": "pdflatex -> bibtex -> pdflatex*2",
+			"tools": [
+				"pdflatex",
+				"bibtex",
+				"pdflatex",
+				"pdflatex",
+			],
+		},
+		{
+			"name": "xelatex -> bibtex -> xelatex*2",
+			"tools": [
+				"xelatex",
+				"bibtex",
+				"xelatex",
+				"xelatex",
+			],
+		},
+	],
+	"latex-workshop.latex.tools": [
+		{
+			"name": "docker-latex",
+			"command": "docker",
+			"args": [
+				"run",
+				"-v",
+				"/home/gray/Documents/Gray_HNU_MasterThesis:/workspace", // 将当前工作区挂载到容器中
+				// "${env:WORKSPACE_PATH}:/workspace",  // 将当前工作区挂载到容器中
+				"-w",
+				"/workspace", // 设置容器中的工作目录
+				"leplusorg/latex", // 使用的 Docker 镜像
+				"xelatex", // 使用 xelatex
+				"-synctex=1", // 启用 Synctex
+				"-interaction=nonstopmode", // 防止中断编译
+				// "Master-thesis.tex"  // 自动使用当前打开的文件
+				"%DOCFILE%" // 自动使用当前打开的文件
+			]
+		},
+		{
+			"name": "docker-bibtex",
+			"command": "docker",
+			"args": [
+				"run",
+				"-v",
+				"/home/gray/Documents/Gray_HNU_MasterThesis:/workspace", // 将当前工作区挂载到容器中
+				"-w",
+				"/workspace", // 设置容器中的工作目录
+				"leplusorg/latex", // 使用的 Docker 镜像
+				"bibtex", // 使用 bibtex
+				"%DOCFILE%" // 自动使用当前打开的文件
+			]
+		},
+		{
+			"name": "redirect",
+			"command": "/bin/bash",
+			"args": [
+				"-c",
+				"./redirect_synctex.sh"
+			]
+		},
+		{
+			"name": "pdflatex",
+			"command": "pdflatex",
+			"args": [
+				"-synctex=1",
+				"-interaction=nonstopmode",
+				"-file-line-error",
+				"%DOCFILE%",
+			],
+		},
+		{
+			"name": "bibtex",
+			"command": "bibtex",
+			"args": [
+				"%DOCFILE%",
+			],
+		},
+		{
+			"name": "xelatex",
+			"command": "xelatex",
+			"args": [
+				"-synctex=1",
+				"-interaction=nonstopmode",
+				"-file-line-error",
+				"%DOCFILE%",
+			],
+		},
+	],
+	"latex-workshop.view.pdf.viewer": "tab", // 标签模式打开pdf
+	"latex-workshop.synctex.afterBuild.enabled": true, // 启用反向搜索
+	"latex-workshop.view.pdf.internal.synctex.keybinding": "double-click", // 双击反向搜索（反向搜索见下文解释）
+	// 以下是其他配置，推荐但非必须
+	"editor.formatOnPaste": true, // 粘贴到VSC，立即格式化粘帖内容；为了bibtex格式化
+	"editor.formatOnSave": true, //文件保存时，自动格式化，配合bib按bibkey排序使用，很方便，以及latex 公式模块缩进；
+	"editor.wordWrap": "on", // 行视距内自动换行（防止长行出现）
+	"latex-workshop.bibtex-fields.sort.enabled": true, // .bib每个item按field自定义排序
+	"latex-workshop.bibtex-fields.order": [
+		"title",
+		"author",
+		"booktitle",
+		"journal",
+		"year",
+		"volume",
+		"page"
+	],
+	"latex-workshop.bibtex-format.sort.enabled": true, // 对.bib所有item排序
+	"latex-workshop.bibtex-format.sortby": [
+		"booktitle",
+		"journal",
+		"year"
+	],
+	"latex-workshop.intellisense.package.enabled": true,
+	// "latex-workshop.latex.autoClean.run": "onBuilt", // 编译完成后清理多余文件
+	// "latex-workshop.latex.clean.fileTypes": [  // 设定清理的文件类型
+	// 	"*.aux", "*.bbl", "*.blg", "*.idx", "*.ind", "*.lof", "*.lot", "*.out", "*.toc",
+	// "*.acn", "*.acr", "*.alg", "*.glg", "*.glo", "*.gls", "*.ist", "*.fls", "*.log",
+	// 	"*.fdb_latexmk"
+	//     ],
+	"latex-workshop.docker.enabled": true,
+	"latex-workshop.linting.delay": 500,
+}
