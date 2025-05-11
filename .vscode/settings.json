@@ -40,7 +40,7 @@
 			"args": [
 				"run",
 				"-v",
-				"/home/gray/Documents/Gray_HNU_MasterThesis:/workspace", // 将当前工作区挂载到容器中
+				"/home/gray/Documents/HNU_MasterThesis_Template:/workspace", // 将当前工作区挂载到容器中
 				// "${env:WORKSPACE_PATH}:/workspace",  // 将当前工作区挂载到容器中
 				"-w",
 				"/workspace", // 设置容器中的工作目录
@@ -58,7 +58,7 @@
 			"args": [
 				"run",
 				"-v",
-				"/home/gray/Documents/Gray_HNU_MasterThesis:/workspace", // 将当前工作区挂载到容器中
+				"/home/gray/Documents/HNU_MasterThesis_Template:/workspace", // 将当前工作区挂载到容器中
 				"-w",
 				"/workspace", // 设置容器中的工作目录
 				"leplusorg/latex", // 使用的 Docker 镜像

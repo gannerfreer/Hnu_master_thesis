@@ -75,7 +75,5 @@ docker pull leplusorg/latex
 ### 5. 编译
 
 如果上述配置没有问题，那么可以左边的插件目录中找到`LaTeX Workshop`，点击`Build LaTeX project`即可开始编译，编译完成后会在项目根目录生成`Master-thesis.pdf`文件。
-
 ![build](./res/build.png)
-
 也可以通过`Ctrl+S`保存文件时自动编译，配置文件中已经做了相关配置。

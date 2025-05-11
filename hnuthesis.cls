@@ -38,9 +38,10 @@
 % \setmonofont[Path = ./fonts/]{Courier New}
 % \setCJKmainfont[Path = ./fonts/, AutoFakeBold]{SimSun.ttf}
 % \setCJKsansfont[Path = ./fonts/]{SimHei.ttf}
+\RequirePackage{xeCJK}
 % 设置字体路径
-\setmainfont[Path = ./fonts/]{Times New Roman}    % 设置西文字体
-\setsansfont[Path = ./fonts/]{Times New Roman}    % 设置无衬线西文字体
+\setmainfont[Path = ./fonts/,BoldFont = Times New Roman Bold]{Times New Roman}    % 设置西文字体
+\setsansfont[Path = ./fonts/,BoldFont = Times New Roman Bold]{Times New Roman}    % 设置无衬线西文字体
 \setmonofont[Path = ./fonts/]{Courier New}        % 设置等宽字体
 
 % 设置中文字体
@@ -97,6 +98,7 @@
 \hnu@define@term{workon}
 \hnu@define@term{supervisor}
 \hnu@define@term{cosupervisor}
+\hnu@define@term{encosupervisor}
 \hnu@define@term{submitdate}
 \hnu@define@term{defensedate}
 \hnu@define@term{chair}
@@ -112,6 +114,7 @@
 
 \if@hnu@doctor
   \newcommand\hnu@thesisname{硕士学位论文}%
+  \newcommand\hnu@thesisytname{湖南大学硕士学位论文}%
 \fi
 
 % 表格：
@@ -142,6 +145,7 @@
 \newcommand\hnu@acknowledgementsname{致\quad 谢}
 \newcommand\hnu@tocname{目\quad 录}
 \newcommand\hnu@summaryname{总结与展望}
+\newcommand\hnu@dissertation{答辩委员会名单}
 \newcommand\hnu@notationname{符号说明}
 \def\equationautorefname~#1\null{公式~(#1)\null}%
 \def\footnoteautorefname{脚注}%
@@ -172,7 +176,7 @@
 \fancypagestyle{hnu@headings}{%
   \fancyhf{}%
   \fancyhead[CE]{\setfontsize{9pt}\hnu@yttitle}%
-  \fancyhead[CO]{\setfontsize{9pt}\hnu@thesisname}
+  \fancyhead[CO]{\setfontsize{9pt}\hnu@thesisytname}
   \fancyfoot[C]{\setfontsize{9pt}\thepage}
   \fancyheadoffset[LO,LE]{5mm} %页眉偏移调整
   \fancyheadoffset[RO,RE]{-3mm}
@@ -242,7 +246,7 @@
         % titleformat = \spacetitle,
         number      = \thechapter,
         aftername   = \hspace{\ccwd},
-        beforeskip  = 1em, % 24bp - 31bp
+        beforeskip  = -2em, % 24bp - 31bp
         afterskip   = 1em, % 18bp - 10bp
         % fixskip   = true, % will be used in future version
     },
@@ -312,6 +316,8 @@
         headheight=0cm, headsep=0.8cm,
         footskip=0.8cm}
     \pagenumbering{gobble}
+    % \pdfbookmark[0]{封面}{titlepage}
+    % \make@reviewtitle
     \pdfbookmark[0]{封面}{titlepage}
     \make@cntitle
     \pdfbookmark[0]{Title page}{entitlepage}
@@ -320,6 +326,30 @@
     \pdfbookmark[0]{原创性声明}{statement}
     \make@statement
 }
+
+% % 盲审封面
+% \renewcommand\maketitle{%
+%     \newgeometry{
+%         top=3.8cm, bottom=3.8cm,
+%         left=3.2cm, right=3.2cm,
+%         headheight=0cm, headsep=0.8cm,
+%         footskip=0.8cm}
+%     \pagenumbering{gobble}
+%     \pdfbookmark[0]{封面}{titlepage}
+%     \make@reviewtitle
+%     % \pdfbookmark[0]{封面}{titlepage}
+%     % \make@cntitle
+%     % \pdfbookmark[0]{Title page}{entitlepage}
+%     % \make@entitle
+%     \restoregeometry
+%     \newgeometry{left=3.3cm,right=3.3cm,top=3.5cm, bottom=3cm}
+%     \setfontsize{12.5pt}[20pt]
+%     \pagenumbering{Roman}
+%     \restoregeometry
+%     % \pdfbookmark[0]{原创性声明}{statement}
+%     % \make@statement
+% }
+
 
 \newcommand\hnu@supervisorline{%
   \ifx\hnu@encosupervisor\@empty%
@@ -353,80 +383,121 @@
           \newlength{\@cw}
           \setlength{\@cw}{3.2cm}
 
-          \setfontsize{12.5pt}%
-          \begin{tabularx}{\linewidth}{lcccr}%
-            \makebox[\@tw][s]{\sffamily\textbf{学校代号}} & \linetext{\@cw}{c}{\hnu@hnucode} &
-            \makebox[2.5cm][c]{\qquad} &
-            \makebox[\@tw][s]{\sffamily\textbf{学号}} & \linetext{\@cw}{c}{\hnu@authorid} \\%
-            \makebox[\@tw][s]{\sffamily\textbf{分类号}} & \linetext{\@cw}{c}{\hnu@clc} &
-            \makebox[2.5cm][c]{\qquad} &
-            \makebox[\@tw][s]{\sffamily\textbf{密级}} & \linetext{\@cw}{c}{\hnu@secrettext}
-          \end{tabularx}};%
-
-      \vpostext{5cm}{\includegraphics[height=6cm]{figures/hnu-logo.png}}%
-      \vpostext{12cm}{\bf\sffamily\setfontsize{22pt}\hnu@thesisname}%
-      \vpostext{15cm}{\bf\sffamily\setfontsize{26pt}\hnu@title}%
+          % \setfontsize{12.5pt}%
+          % \begin{tabularx}{\linewidth}{lcccr}%
+          %   \makebox[\@tw][s]{\sffamily\textbf{学校代号}} & \linetext{\@cw}{c}{\hnu@hnucode} &
+          %   \makebox[2.5cm][c]{\qquad} &
+          %   \makebox[\@tw][s]{\sffamily\textbf{学号}} & \linetext{\@cw}{c}{\hnu@authorid} \\%
+          %   \makebox[\@tw][s]{\sffamily\textbf{分类号}} & \linetext{\@cw}{c}{\hnu@clc} &
+          %   \makebox[2.5cm][c]{\qquad} &
+          %   \makebox[\@tw][s]{\sffamily\textbf{密级}} & \linetext{\@cw}{c}{\hnu@secrettext}
+          % \end{tabularx}
+          };%
+      \vpostext{5cm}{\includegraphics[height=3cm]{figures/hnu_new_logo.png}}%
+      \vpostext{9.5cm}{\bf\sffamily\setfontsize{22pt}\hnu@thesisname}%
+      \vpostext{13cm}{\bf\sffamily\setfontsize{26pt}\hnu@title}%
 
       \tikz[remember picture,overlay]
-        \node [xshift=5cm,yshift=-20cm] at (current page.north west)%
+        \node [xshift=6.5cm,yshift=-19.5cm] at (current page.north west)%
             [below right,align=left] {%
-          \setlength{\@tw}{94pt}
+          \setlength{\@tw}{3.2cm}
           \setlength{\@cw}{6.4cm}
 
-          \setfontsize{12.5pt}%
+          \setfontsize{12pt}%
+          % 旧表格
+          % \begin{tabular}{@{}l@{\hspace{\ccwd}}l@{}}%
+          %   \makebox[\@tw][s]{\sffamily\textbf{学位申请人姓名}} & \linetext{\@cw}{l}{\qquad\hnu@author} \\%
+          %   \makebox[\@tw][s]{\sffamily\textbf{培养单位}} & \linetext{\@cw}{l}{\qquad\hnu@college} \\
+          %   \makebox[\@tw][s]{\sffamily\textbf{导师姓名及职称}} & \linetext{\@cw}{l}{\qquad\hnu@supervisor} \\
+          %   \makebox[\@tw][s]{\sffamily\textbf{学科专业}} & \linetext{\@cw}{l}{\qquad\hnu@major} \\
+          %   \makebox[\@tw][s]{\sffamily\textbf{研究方向}} & \linetext{\@cw}{l}{\qquad\hnu@workon} \\
+          %   \makebox[\@tw][s]{\sffamily\textbf{论文提交日期}} & \linetext{\@cw}{l}{\qquad\hnu@submitdate}
+          % \end{tabular}};%
+          % 新表格
           \begin{tabular}{@{}l@{\hspace{\ccwd}}l@{}}%
-            \makebox[\@tw][s]{\sffamily\textbf{学位申请人姓名}} & \linetext{\@cw}{l}{\qquad\hnu@author} \\%
-            \makebox[\@tw][s]{\sffamily\textbf{培养单位}} & \linetext{\@cw}{l}{\qquad\hnu@college} \\
-            \makebox[\@tw][s]{\sffamily\textbf{导师姓名及职称}} & \linetext{\@cw}{l}{\qquad\hnu@supervisor} \\
-            \makebox[\@tw][s]{\sffamily\textbf{学科专业}} & \linetext{\@cw}{l}{\qquad\hnu@major} \\
-            \makebox[\@tw][s]{\sffamily\textbf{研究方向}} & \linetext{\@cw}{l}{\qquad\hnu@workon} \\
-            \makebox[\@tw][s]{\sffamily\textbf{论文提交日期}} & \linetext{\@cw}{l}{\qquad\hnu@submitdate}
+            \makebox[\@tw][s]{\sffamily\textbf{作者姓名}} & \makebox[\@cw][l]{\qquad\hnu@author} \\%
+            \makebox[\@tw][s]{\sffamily\textbf{指导教师}} & \makebox[\@cw][l]{\qquad\hnu@supervisor} \\
+            & \makebox[\@cw][l]{\qquad\hnu@cosupervisor} \\
+            \makebox[\@tw][s]{\sffamily\textbf{培养单位}} & \makebox[\@cw][l]{\qquad\hnu@college} \\
+            \makebox[\@tw][s]{\sffamily\textbf{专业类别}} & \makebox[\@cw][l]{\qquad\hnu@major} \\
+            \makebox[\@tw][s]{\sffamily\textbf{专业领域}} & \makebox[\@cw][l]{\qquad\hnu@workon}
           \end{tabular}};%
 
       \clearpage
       \thispagestyle{empty}
 
       \tikz[remember picture,overlay]
-        \node [xshift=5cm,yshift=-2.5cm] at (current page.north west)%
+        \node [xshift=3.6cm,yshift=-2.5cm] at (current page.north west)%
             [below right,align=left] {%
 
           \setlength{\@tw}{66.5pt}
           \setlength{\@cw}{3.2cm}
 
-          \setfontsize{12.5pt}%
+          \setfontsize{12pt}%
           \begin{tabularx}{\linewidth}{ll}%
-            \makebox[\@tw][s]{\sffamily\textbf{学校代号：}} & \makebox[\@cw][l]{\hnu@hnucode} \\
-            \makebox[\@tw][s]{\sffamily\textbf{学号：}} & \makebox[\@cw][l]{\hnu@authorid} \\
-            \makebox[\@tw][s]{\sffamily\textbf{密级：}} & \makebox[\@cw][l]{\hnu@secrettext}
+            \makebox[\@tw][s]{\sffamily\textbf{学校代号}} & \linetext{\@cw}{l}{\sffamily\textbf{~\hnu@hnucode}} \\
+            \makebox[\@tw][s]{\sffamily\textbf{学号}} & \linetext{\@cw}{l}{\sffamily\textbf{~\hnu@authorid}} \\
+            \makebox[\@tw][s]{\sffamily\textbf{密级}} & \linetext{\@cw}{l}{\sffamily\textbf{~\hnu@secrettext}}
           \end{tabularx}};%
 
       \tikz[remember picture,overlay]
-        \node [xshift=5.4cm,yshift=-8cm] at (current page.north west)%
+        \node [xshift=4cm,yshift=-8cm] at (current page.north west)%
             [below right,align=left]%
             {\parbox{\textwidth}{\setfontsize{18pt}\hnu@hnuname\hnu@thesisname}};
 
       \tikz[remember picture,overlay]
-        \node [xshift=5.4cm,yshift=-12cm] at (current page.north west)%
+        \node [xshift=4cm,yshift=-12cm] at (current page.north west)%
             [below right,align=left]%
             {\parbox{12cm}{\bf\sffamily\setfontsize{22pt}\hnu@title}};
 
       \tikz[remember picture,overlay]
-        \node [xshift=5.2cm,yshift=-18cm] at (current page.north west)%
+        \node [xshift=4cm,yshift=-18cm] at (current page.north west)%
             [below right,align=left] {%
-          \setlength{\@tw}{107pt}
+          \setlength{\@tw}{3.2cm}
           \setlength{\@cw}{9.5cm}
 
-          \setfontsize{12.5pt}%
+          \setfontsize{12pt}%
           \begin{tabular}{@{}l}%
-            \linetext{\@cw}{l}{\makebox[\@tw][s]{\sffamily\textbf{学位申请人姓名：}}\qquad\hnu@author} \\%
+            \linetext{\@cw}{l}{\makebox[\@tw][s]{\sffamily\textbf{作者姓名：}}\qquad\hnu@author} \\%
+            \linetext{\@cw}{l}{\makebox[\@tw][s]{\sffamily\textbf{指导教师：}}\qquad\hnu@supervisor} \\
+            \linetext{\@cw}{l}{\makebox[\@tw][s]{}\qquad\hnu@cosupervisor} \\
             \linetext{\@cw}{l}{\makebox[\@tw][s]{\sffamily\textbf{培养单位：}}\qquad\hnu@college} \\
-            \linetext{\@cw}{l}{\makebox[\@tw][s]{\sffamily\textbf{导师姓名及职称：}}\qquad\hnu@supervisor} \\
-            \linetext{\@cw}{l}{\makebox[\@tw][s]{\sffamily\textbf{专业名称：}}\qquad\hnu@major} \\
+            \linetext{\@cw}{l}{\makebox[\@tw][s]{\sffamily\textbf{专业类别：}}\qquad\hnu@major} \\
+            \linetext{\@cw}{l}{\makebox[\@tw][s]{\sffamily\textbf{专业  领域：}}\qquad\hnu@workon} \\
             \linetext{\@cw}{l}{\makebox[\@tw][s]{\sffamily\textbf{论文提交日期：}}\qquad\hnu@submitdate} \\
             \linetext{\@cw}{l}{\makebox[\@tw][s]{\sffamily\textbf{论文答辩日期：}}\qquad\hnu@defensedate} \\
             \linetext{\@cw}{l}{\makebox[\@tw][s]{\sffamily\textbf{答辩委员会主席：}}\qquad\hnu@chair}
           \end{tabular}};%
     \end{titlepage}
+}
+
+\newcommand\make@reviewtitle{
+  \begin{titlepage}
+    \thispagestyle{empty}
+    \vspace*{1.5cm}
+    \begin{center}
+        \zihao{4} 
+        {硕士学位论文} \\[0.5cm]
+    \end{center}
+    \begin{center}
+        \fontsize{22pt}{22pt}\selectfont
+        {\heiti \textbf{\hnu@title}} \\[3.5cm]
+    \end{center}
+
+    \begin{flushleft}
+        \fontsize{12pt}{18pt}\selectfont  % 14pt 字号，行距 1.2 倍（16.8pt）
+        \hspace{3.5cm} {学\hspace{0.333em}科\hspace{0.333em}专\hspace{0.333em}业：} 机械\\ 
+        \hspace{3.5cm} {研\hspace{0.333em}究\hspace{0.333em}方\hspace{0.333em}向：} 车辆工程（视觉同时定位与建图） \\
+        \hspace{3.5cm} {学\hspace{3em}院：} 机械与运载工程学院 \\
+        \hspace{3.5cm} {编\hspace{3em}号：}  \\[9cm]
+    \end{flushleft}
+
+    \begin{center}
+        \zihao{-4} 
+        { 2025 年 \quad 4 月}
+    \end{center}
+
+  \end{titlepage}
 }
 
 % 英文封面-博士学位
@@ -456,51 +527,46 @@
 % 英文封面-硕士学位
 \newcommand\make@entitle{%
    \begin{titlepage}%
-       \vpostext{3.9cm}{\setfontsize{15pt}\textbf{\hnu@entitle}}%
-       \vpostext{6.5cm}{\setfontsize{12.5pt}\textbf{By}}%
-       \vpostext{7.5cm}{\setfontsize{12.5pt}\textbf{\hnu@enauthor}}%
-       \vpostext{9cm}{\setfontsize{12.5pt}\textbf{\hnu@enbachelor}}%
-%        \vpostext{9.5cm}{\setfontsize{12.5pt}\textbf{\hnu@enmaster}}%
+       \centering  % 
+       \vspace{3.9cm}\setfontsize{15pt}\hnu@entitle\par%
+       \vspace{1cm}\setfontsize{12pt}by\par%
+       \vspace{0.4cm}\setfontsize{12pt}\hnu@enauthor\par%
+       \vspace{0.4cm}\setfontsize{12pt}\hnu@enbachelor\par%
 
-       \vpostext{10.5cm}{\setfontsize{12.5pt}\textbf{A thesis submitted in partial satisfaction of the}}%
-       \vpostext{11.5cm}{\setfontsize{12.5pt}\textbf{requirements for the degree of}}%
-       \vpostext{12.5cm}{\setfontsize{12.5pt}\textbf{\hnu@endoctor}}%
-       \vpostext{13.5cm}{\setfontsize{12.5pt}\textbf{in}}%
-       \vpostext{14.5cm}{\setfontsize{12.5pt}\textbf{\hnu@enmajor}}%
-       \vpostext{15.5cm}{\setfontsize{12.5pt}\textbf{in the}}%
-       \vpostext{16.5cm}{\setfontsize{12.5pt}\textbf{Graduate School}}%
-       \vpostext{17.5cm}{\setfontsize{12.5pt}\textbf{of}}%
-       \vpostext{18.5cm}{\setfontsize{12.5pt}\textbf{\hnu@enhnuname}}%
-       \vpostext{21cm}{\setfontsize{12.5pt}\textbf{Supervisor}}%
-       \vpostext{22cm}{\setfontsize{12.5pt}\textbf{\hnu@ensupervisor}}%
-       \vpostext{23cm}{\setfontsize{12.5pt}\textbf{\hnu@endate}}%
+       \vspace{0.4cm}\setfontsize{12pt}A thesis submitted in partial fulfillment of the\par%
+       \vspace{0.4cm}\setfontsize{12pt}requirements for the degree of\par%
+       \vspace{0.4cm}\setfontsize{12pt}\hnu@endoctor\par%
+       \vspace{0.4cm}\setfontsize{12pt}in\par%
+       \vspace{0.4cm}\setfontsize{12pt}\hnu@enmajor\par%
+       \vspace{0.4cm}\setfontsize{12pt}in the\par%
+       \vspace{0.4cm}\setfontsize{12pt}Graduate School\par%
+       \vspace{0.4cm}\setfontsize{12pt}of\par%
+       \vspace{0.4cm}\setfontsize{12pt}\hnu@enhnuname\par%
+       \vspace{0.4cm}\setfontsize{12pt}Supervisor\par%
+       \vspace{0.4cm}\setfontsize{12pt}\hnu@ensupervisor\par%
+       \vspace{0.4cm}\setfontsize{12pt}\hnu@encosupervisor\par%
+       \vspace{0.4cm}\setfontsize{12pt}\hnu@endate\par%
    \end{titlepage}
 }
 
 % 声明
 \newcommand{\hnu@declaretext} {
-本人郑重声明：所呈交的论文是本人在导师的指导下独立进行研究所取得的研究成果。 除了文中特别加以标注引用的内容外，本论文不包含任何其他个人或集体已经发表或撰写的 成果作品。对本文的研究做出重要贡献的个人和集体，均已在文中以明确方式标明。本人完 全意识到本声明的法律后果由本人承担。
+本人郑重声明：所呈交的论文是本人在导师的指导下独立进行研究所取得的研究成果。除了文中特别加以标注引用的内容外，本论文不包含任何其他个人或集体已经发表或撰写的成果作品。对本文的研究做出重要贡献的个人和集体，均已在文中以明确方式标明。本人完全意识到本声明的法律后果由本人承担。
 }
 
 \newcommand{\hnu@authorization}{
-本学位论文作者完全了解学校有关保留、使用学位论文的规定，同意学校保留并向国家有 关部门或机构送交论文的复印件和电子版，允许论文被查阅和借阅。本人授权湖南大学可以 将本学位论文的全部或部分内容编入有关数据库进行检索，可以采用影印、缩印或扫描等复 制手段保存和汇编本学位论文。
+本学位论文作者完全了解学校有关保留、使用学位论文的规定，同意学校保留并向国家有关部门或机构送交论文的复印件和电子版，允许论文被查阅和借阅。本人授权湖南大学可以将本学位论文的全部或部分内容编入有关数据库进行检索，可以采用影印、缩印或扫描等复制手段保存和汇编本学位论文。
 
-本学位论文属于
-
-    \qquad\qquad\qquad\quad 1、保密 $\square$，在\hnu@underline[2.5em]{}年解密后适用本授权书。
-
-    \qquad\qquad\qquad\quad 2、不保密 $\square$。
-
-    \qquad\qquad\qquad\quad（请在以上相应方框内打“\usym{1F5F8}”）
+涉密学位论文在解密后适用本授权书。
 }
 
 \newcommand\make@statement{
-    \newgeometry{left=3.3cm,right=3.3cm,top=3.5cm, bottom=3cm}
+    \newgeometry{left=3cm,right=3cm,top=3.5cm, bottom=3cm}
     \thispagestyle{plain}
-    \pagenumbering{Roman}
-    \setcounter{page}{1}
-    \addcontentsline{toc}{chapter}{学位论文原创性声明和学位论文版权使用授权书}
-    \setfontsize{12.5pt}[20pt]
+    % \pagenumbering{Roman}
+    % \setcounter{page}{1}
+    % \addcontentsline{toc}{chapter}{学位论文原创性声明和学位论文版权使用授权书}
+    \setfontsize{12pt}[24pt]
     \vspace*{-0.15cm}
     \begin{center}
       \sffamily
@@ -512,9 +578,9 @@
 
     \hnu@declaretext\par
 
-    \vskip 1cm
+    \vskip 0.5cm
     作者签名：\qquad\qquad\qquad\qquad\qquad\quad 日期：\qquad\quad 年\qquad 月\qquad 日
-    \vskip 1cm
+    \vskip 2cm
 
     \begin{center}
       \sffamily
@@ -523,7 +589,7 @@
     \vskip 0.3cm
 
     \hnu@authorization\par
-    \vskip 1cm
+    \vskip 0.5cm
 
     作者签名：\qquad\qquad\qquad\qquad\qquad\quad 日期：\qquad\quad 年\qquad 月\qquad 日
     
@@ -535,7 +601,8 @@
 \newenvironment{abstract}{%
     \hnu@chapter{\hnu@abstractname}%
     \addcontentsline{toc}{chapter}{\hnu@abstractname}
-    \setcounter{page}{2}
+    \pagenumbering{Roman}
+    \setcounter{page}{1}
   }{}
 \newenvironment{enabstract}{%
     \hnu@chapter[Abstract]{\hnu@enabstractname}
@@ -548,9 +615,11 @@
 }{}
 \newenvironment{acknowledgements}{%
   \chapter{\hnu@acknowledgementsname}%
-  % \addcontentsline{toc}{chapter}{\hnu@acknowledgementsname}
 }{}
-
+\newenvironment{dissertation}{%
+    \hnu@chapter{\hnu@dissertation}%
+    \addcontentsline{toc}{chapter}{\hnu@dissertation}
+}{}
 \newcommand\keywords[1]{%
   \par\phantom{empty}\par\noindent\hangindent=4\ccwd\relax%
   \sffamily\textbf{关键词}：#1}
@@ -655,6 +724,7 @@
 % 排版风格，标题，图表
 \setlength{\parindent}{2\ccwd}
 \setlength{\parskip}{\z@}
+\setlength{\textfloatsep}{12pt} %浮动物（图，表）到文字距离
 \RequirePackage{upgreek}
 \renewcommand\pi{\uppi}
 \RequirePackage{amssymb}
@@ -677,8 +747,8 @@
 }
 \captionsetup[figure]{
     position = bottom,
-    aboveskip = 6bp,
-    belowskip = {12bp-\intextsep},
+    aboveskip = 6bp, % 图注设置
+    belowskip = {6bp-\intextsep},
 }
 \captionsetup[table]{
     position = top,

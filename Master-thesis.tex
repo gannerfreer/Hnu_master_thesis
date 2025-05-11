@@ -1,9 +1,10 @@
 %!TEX encoding = UTF-8 Unicode
 %!TEX program = xelatex
- 
+% \special{dvipdfmx:config z 0} %取消PDF压缩
 \documentclass[doctor]{hnuthesis}
 \usepackage[small,bf,sf,SF,BF]{subfigure}
-\usepackage{amsmath, unicode-math}
+% \usepackage{amsmath, unicode-math} % 数学公式注释才能好
+\usepackage{amssymb}
 \DeclareMathAlphabet{\mathcal}{OMS}{cmsy}{m}{n}
 \DeclareMathAlphabet{\mathbb}{U}{msb}{m}{n}%
 %\setlength\cftbeforechapskip{0.5em}  
@@ -12,14 +13,14 @@
 \setlength{\algotitleheightrule}{0.75pt} % thicknes of the rule below the title
 \usepackage{algpseudocode}
 \usepackage{float}
-\usepackage{makecell}  
+\usepackage{makecell}
 \usepackage{utfsym}
 \usepackage{tikz}
 \usepackage{etoolbox}
 \newcommand{\circled}[2][]{\tikz[baseline=(char.base)]
-    {\node[shape = circle, draw, inner sep = 1pt]
-    (char) {\phantom{\ifblank{#1}{#2}{#1}}};%
-    \node at (char.center) {\makebox[0pt][c]{#2}};}}
+{\node[shape = circle, draw, inner sep = 1pt]
+(char) {\phantom{\ifblank{#1}{#2}{#1}}};%
+\node at (char.center) {\makebox[0pt][c]{#2}};}}
 \robustify{\circled} 
 
 \usepackage{listings}
@@ -40,36 +41,42 @@
 \clc{TP391}         
 % 密级       
 \secrettext{公开}                  
-
-% 标题 
-\title{湖南大学硕士学位论文} % TODO 换行
-\yttitle{论文}
-\entitle{Hunan University Master's Dissertation \LaTeX{} Template}
+% 标题与页眉标题
+% \title{动态场景下智能车辆视觉惯性SLAM抗扰动设计与研究} 
+\title{动态场景智能车辆视觉惯性SLAM：\\运动干扰抑制与鲁棒融合方法} 
+% 页标题
+\yttitle{动态场景智能车辆视觉惯性SLAM：运动干扰抑制与鲁棒融合方法}
+% 英文标题
+\entitle{Visual-Inertial SLAM for Intelligent Vehicles in Dynamic Scenarios: Methods for Suppressing Motion Interference and Robust Fusion}
 % 作者
-\author{高澄宇}
-\enauthor{Gao Chengyu}
+\author{张三}
+\enauthor{Gray}
 % 学号
-\authorid{S2202W0446}      
+\authorid{xxxx}      
 % 学院
 \college{机械与运载工程学院}
 % 专业
 \major{机械} 
-\enmajor{Mechanical Engineering}
-%学士学位获得学校，年份
-\enbachelor{B.E.~(****** University)2016}
-\enmaster{M.S.~(****** University)2018}
-\endoctor{Doctor of Philosophy}
+% 主修专业
+\enmajor{Mechanical}
+% 学士学位获得学校，年份 B.E.工学学士
+\enbachelor{B.E.~(XX University)2022}
+% 申请学位
+\endoctor{Master of Engineering}
 % 研究方向
-\workon{智能网联汽车}
+\workon{视觉同时定位与建图}
 % 导师
-\supervisor{xxxx\ 教授}
-\ensupervisor{Professor XXX}
+\supervisor{秦晓辉\ 副研究员}
+\ensupervisor{Associated Researcher Xiaohui Qin}
+\cosupervisor{胡云卿\ 高级工程师}
+\encosupervisor{Senior Engineer Yunqing Hu}
+
 % 论文提交、答辩日期
-\submitdate{2025年x月xx日}
-\defensedate{2025年x月xx日}
-\endate{June, 2022}
+\submitdate{2025年4月14日}
+\defensedate{2025年5月17日}
+\endate{May, 2025}
 % 答辩委员会主席
-\chair{待定}
+\chair{程军圣\ 教授}
 \usepackage[export]{adjustbox} 
 \begin{document}
 % 封面、原创性声明
@@ -81,32 +88,39 @@
 \tableofcontents
 % 插图附表索引
 \begingroup
-	\renewcommand*{\addvspace}[1]{}
-	\newcommand{\loflabel}{图} 
-	\renewcommand{\numberline}[1]{\loflabel~#1\hspace*{1em}}	
-	\listoffigures
-	
-	\newcommand{\lotlabel}{表}
-	\renewcommand{\numberline}[1]{\lotlabel~#1\hspace*{1em}}
-	\listoftables
-\endgroup
+\renewcommand*{\addvspace}[1]{}
+\newcommand{\loflabel}{图}
+\renewcommand{\numberline}[1]{\loflabel~#1\hspace*{1em}}
+\listoffigures
 
+\newcommand{\lotlabel}{表}
+\renewcommand{\numberline}[1]{\lotlabel~#1\hspace*{1em}}
+\listoftables
+\endgroup
+\let\cleardoublepage\clearpage
 
 % 正文章节
 \mainmatter
 %\input{chapters/prematter}
 % 设置表格字体大小
 \AtBeginEnvironment{tabular}{\small} % 调整为所需的字体大小
-\input{chapters/ch1}
 \input{chapters/example}
 \input{chapters/summary}
 \bibliography{MyLibrary.bib}
 
 \appendix
-\input{chapters/publications}
-\input{chapters/projects}
+% 新版本取消附录
+% % \input{chapters/publications_review.tex}
+% \input{chapters/publications}
+% \input{chapters/projects}
 
 \backmatter
+
+
+\input{chapters/publications}
+% \input{chapters/projects}
 \input{chapters/acknowledgements}
+
+\input{chapters/dissertation}
 
 \end{document}
